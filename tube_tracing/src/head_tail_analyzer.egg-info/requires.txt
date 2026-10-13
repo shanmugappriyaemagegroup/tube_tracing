@@ -1,0 +1,9 @@
+numpy
+opencv-python
+scikit-image
+ultralytics>=8.3.0
+pyyaml
+
+[dev]
+pytest
+build

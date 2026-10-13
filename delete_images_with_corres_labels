@@ -1,0 +1,40 @@
+import os
+
+# Change these paths
+IMAGE_DIR = r"C:\Users\EmageVision\Documents\extracted_frames_29-09-2026\images"
+LABEL_DIR = r"C:\Users\EmageVision\Documents\extracted_frames_29-09-2026\labels"
+
+image_extensions = {".jpg", ".jpeg", ".png", ".bmp", ".webp"}
+
+deleted_images = 0
+missing_labels = []
+
+for image_name in os.listdir(IMAGE_DIR):
+    image_path = os.path.join(IMAGE_DIR, image_name)
+
+    # Skip folders and non-image files
+    if not os.path.isfile(image_path):
+        continue
+
+    name, ext = os.path.splitext(image_name)
+
+    if ext.lower() not in image_extensions:
+        continue
+
+    label_path = os.path.join(LABEL_DIR, name + ".txt")
+
+    # If label does not exist, delete image
+    if not os.path.exists(label_path):
+        os.remove(image_path)
+        deleted_images += 1
+        missing_labels.append(image_name)
+
+print("\nDone!")
+print(f"Images deleted because label was missing: {deleted_images}")
+
+if missing_labels:
+    print("\nDeleted images:")
+    for image in missing_labels:
+        print(image)
+else:
+    print("All images have matching labels.")

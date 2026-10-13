@@ -1,0 +1,41 @@
+# default_config.yaml - used when hta-frames is run without --config.
+# Relative paths are relative to THIS file (inside the installed package).
+# Any setting can be overridden on the command line, e.g. --video, --conf, --scale.
+
+model_path: models\best.pt    # bundled 1280 segmentation model (head, tail)
+video: "C:/Users/EmageVision/Documents/head_training_dataset/videos/trained/29-09-26_video3.mp4"                    # pass --video (a file, or 0 for webcam)
+device: "0"    
+output_video: "C:/Users/EmageVision/Documents/head_tail_classification/results/output.mp4"                # "0" = first GPU, "cpu" = CPU
+
+# detection
+conf: 0.25
+conf_head: 0.4
+conf_tail: 0.2
+max_heads: 0                   # e.g. 2 if the scene always has 2 heads (0 = no limit)
+max_tails: 0
+iou: 0.5
+scale: 1.0                     # shrink frames first; try 0.33-0.5 if the ends look much bigger than in training
+tile: 1280                     # the bundled model was trained at imgsz 1280
+tile_overlap: 0.3
+merge_iou: 0.5
+merge_contain: 0.75
+merge_gap: 0
+cross_role_contain: 0.5
+gray: true
+stride: 1
+
+# tracking
+min_frames: 5
+max_dist: 80
+max_missed: 30
+
+# ROI - null = whole frame. Use --roi roi.json or --draw-roi
+roi_json: null
+draw_roi: true
+
+# outputs (null = don't write)
+output_video: null
+latest_json: null
+history_jsonl: null
+print_frames: true
+show_preview: false
