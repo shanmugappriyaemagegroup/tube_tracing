@@ -1,0 +1,15 @@
+pyproject.toml
+src/head_tail_analyzer/__init__.py
+src/head_tail_analyzer/depth3d.py
+src/head_tail_analyzer/main.py
+src/head_tail_analyzer/measure_from_masks.py
+src/head_tail_analyzer/run_video_frames.py
+src/head_tail_analyzer/tube_ends.py
+src/head_tail_analyzer/video_ends.py
+src/head_tail_analyzer_v.egg-info/PKG-INFO
+src/head_tail_analyzer_v.egg-info/SOURCES.txt
+src/head_tail_analyzer_v.egg-info/dependency_links.txt
+src/head_tail_analyzer_v.egg-info/entry_points.txt
+src/head_tail_analyzer_v.egg-info/requires.txt
+src/head_tail_analyzer_v.egg-info/top_level.txt
+tests/test_measure.py

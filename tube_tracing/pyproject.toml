@@ -3,14 +3,14 @@ requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "head-tail-analyzer"
-version = "0.1.3"
+name = "head-tail-analyzer-v"
+version = "2.0.1"
 description = "Tube head/tail detection, tracking and width measurement (YOLO11-seg)"
 readme = "README.md"
 requires-python = ">=3.9"
 dependencies = [
     "numpy",
-    "opencv-python",
+    "opencv-python>=4.8",
     "scikit-image",
     "ultralytics>=8.3.0",   # YOLO11 needs 8.3+
     "pyyaml",
@@ -24,6 +24,7 @@ dev = ["pytest", "build"]
 run_video_frames   = "head_tail_analyzer.run_video_frames:main"
 video_ends         = "head_tail_analyzer.video_ends:main"
 measure_from_masks = "head_tail_analyzer.measure_from_masks:main"
+head_tail_main     = "head_tail_analyzer.main:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

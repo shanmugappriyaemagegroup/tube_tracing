@@ -1,6 +1,8 @@
+﻿videos/
 .venv/
 __pycache__/
-runs/
 results/
+runs/
 models/
-*.pt
+
+*.pyc

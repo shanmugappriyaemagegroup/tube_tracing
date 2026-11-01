@@ -1,5 +1,5 @@
 numpy
-opencv-python
+opencv-python>=4.8
 scikit-image
 ultralytics>=8.3.0
 pyyaml

@@ -1,41 +1,64 @@
-# default_config.yaml - used when hta-frames is run without --config.
-# Relative paths are relative to THIS file (inside the installed package).
-# Any setting can be overridden on the command line, e.g. --video, --conf, --scale.
+# config.yaml - settings for run_video_frames.py
+# Relative paths are relative to THIS file's folder. Absolute paths are used as-is.
+# Any setting can be overridden on the command line, e.g. --video, --conf, --mm-per-px, --depth.
 
-model_path: models\best.pt    # bundled 1280 segmentation model (head, tail)
-video: "C:/Users/EmageVision/Documents/head_training_dataset/videos/trained/29-09-26_video3.mp4"                    # pass --video (a file, or 0 for webcam)
-device: "0"    
-output_video: "C:/Users/EmageVision/Documents/head_tail_classification/results/output.mp4"                # "0" = first GPU, "cpu" = CPU
+model_path: 'C:\Users\EmageVision\Documents\training_results\29_10_2026_spark\epoch40.pt'
+video: 'C:\Users\EmageVision\Documents\head_training_dataset\videos\tomo_socketing_video\raw and depth\20261027_145529_648_video.mp4'
+device: "0"                    # "0" = first GPU, "cpu" = CPU
 
 # detection
-conf: 0.25
+conf: 0.15
 conf_head: 0.4
 conf_tail: 0.2
 max_heads: 0                   # e.g. 2 if the scene always has 2 heads (0 = no limit)
 max_tails: 0
 iou: 0.5
 scale: 1.0                     # shrink frames first; try 0.33-0.5 if the ends look much bigger than in training
-tile: 1280                     # the bundled model was trained at imgsz 1280
+tile: 1280                     # the model was trained at imgsz 1280
 tile_overlap: 0.3
-merge_iou: 0.5
-merge_contain: 0.75
+merge_iou: 0.3
+merge_contain: 0.6
 merge_gap: 0
 cross_role_contain: 0.5
-gray: true
+gray: false
 stride: 1
 
 # tracking
-min_frames: 5
+min_frames: 3
 max_dist: 80
 max_missed: 30
 
+# width / bigger tube
+width_method: auto             # auto = tube walls if the model has a tubing class, else head/tail mask thickness
+width_from: tail               # tail = bigger tube decided by tails (fair); all = heads too (only with a tubing class)
+min_ratio: 1.15               # 15 % wider needed to call one BIGGER
+mm_per_px: null                # e.g. 0.08 for widths in mm (calibrate with a ruler); null = pixels
+attach_gap: 3
+max_disagree: 0.2
+
+# depth / 3D  (X, Y, Z in metres per head/tail)
+# depth_video: the depth video recorded together with `video` (same frames, aligned to RGB).
+#   auto = use <name>_depth.mkv next to <name>_video.mp4 (handy for whole folders); null = no 3D
+depth_video: 'C:\Users\EmageVision\Documents\head_training_dataset\videos\tomo_socketing_video\raw and depth\20261027_145529_648_depth.mkv'
+camera_matrix:                 # OAK RGB camera (CAM_A) intrinsics
+  - [1070.789795, 0.0, 962.309387]
+  - [0.0, 1070.526978, 550.0]
+  - [0.0, 0.0, 1.0]
+calib_width: 1920              # image size the camera_matrix belongs to
+calib_height: 1080
+dist_coeffs: null              # lens distortion from the calibration file, if you have it
+depth_scale: 0.001             # OAK depth = millimetres -> metres
+depth_min_mm: 100              # depth outside this range = "no depth"
+depth_max_mm: 3000
+depth_smooth: 15               # frames in each track's median X/Y/Z
+
 # ROI - null = whole frame. Use --roi roi.json or --draw-roi
 roi_json: null
-draw_roi: true
+draw_roi: false
 
-# outputs (null = don't write)
-output_video: null
-latest_json: null
-history_jsonl: null
+# outputs (null = don't write) - each key only ONCE
+output_video: results\output10.mp4
+latest_json: results\latest.json
+history_jsonl: results\history5.jsonl
 print_frames: true
 show_preview: false

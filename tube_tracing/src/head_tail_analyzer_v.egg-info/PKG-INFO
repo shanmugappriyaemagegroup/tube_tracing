@@ -1,11 +1,11 @@
 Metadata-Version: 2.4
-Name: head-tail-analyzer
-Version: 0.1.3
+Name: head-tail-analyzer-v
+Version: 2.0.1
 Summary: Tube head/tail detection, tracking and width measurement (YOLO11-seg)
 Requires-Python: >=3.9
 Description-Content-Type: text/markdown
 Requires-Dist: numpy
-Requires-Dist: opencv-python
+Requires-Dist: opencv-python>=4.8
 Requires-Dist: scikit-image
 Requires-Dist: ultralytics>=8.3.0
 Requires-Dist: pyyaml

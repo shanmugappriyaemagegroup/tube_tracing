@@ -1,0 +1,86 @@
+# backend_config.yaml - config for the backend that uses the head_tail_analyzer wheel
+#
+# Relative paths are relative to THIS file's folder, so put the model next to it:
+#     backend/
+#       backend_config.yaml
+#       epoch25_finetune_spark.pt
+#
+# Use from Python:
+#     from head_tail_analyzer.main import HeadTailAnalyzer
+#     analyzer = HeadTailAnalyzer("backend_config.yaml", preload=True)
+#
+#   A) frames from a live OAK camera / your own reader (RGB + aligned depth):
+#     result = analyzer.process_frame(rgb_frame, depth=depth_frame)
+#         rgb_frame   = BGR uint8 image (H, W, 3)
+#         depth_frame = uint16 depth in mm (H, W), aligned to the RGB camera
+#     -> result["detections"][i]["xyz_m"] = [X, Y, Z] in metres
+#
+#   B) a recorded pair of files:
+#     for result in analyzer.process_video(video="..._video.mp4",
+#                                          depth_video="..._depth.mkv"):
+#         ...
+#     (or depth_video="auto" -> uses <name>_depth.mkv next to <name>_video.mp4)
+#
+# Requirements on that machine: the wheel, PyTorch (CUDA build for GPU) and ffmpeg
+# on PATH (ffmpeg is only needed for B - reading the depth .mkv).
+
+model_path: best.pt
+device: "0"                    # "0" = first GPU, "cpu" = CPU
+
+# ---------------------------------------------------------------- detection
+conf: 0.15
+conf_head: 0.4
+conf_tail: 0.2
+max_heads: 0                   # 0 = no limit
+max_tails: 0
+iou: 0.5
+scale: 1.0
+tile: 1280                     # the model was trained at imgsz 1280
+tile_overlap: 0.3
+merge_iou: 0.3
+merge_contain: 0.6
+merge_gap: 0
+cross_role_contain: 0.5
+gray: false
+stride: 1
+
+# ----------------------------------------------------------------- tracking
+min_frames: 3
+max_dist: 80
+max_missed: 30
+
+# ------------------------------------------------------ width / bigger tube
+width_method: auto
+width_from: tail
+min_ratio: 1.15
+mm_per_px: null                # not needed with depth: see width_mm_depth in the result
+attach_gap: 3
+max_disagree: 0.2
+
+# ------------------------------------------------------------ depth / 3D
+# camera_matrix is REQUIRED for 3D (both A and B). It belongs to ONE physical camera:
+# if the backend uses a different OAK, read that camera's values from its calibration.
+camera_matrix:                 # OAK RGB camera (CAM_A) intrinsics
+  - [1070.789795, 0.0, 962.309387]
+  - [0.0, 1070.526978, 550.0]
+  - [0.0, 0.0, 1.0]
+calib_width: 1920              # image size the camera_matrix belongs to
+calib_height: 1080             # (frames of another size are rescaled automatically)
+dist_coeffs: null              # lens distortion, if known
+depth_scale: 0.001             # OAK depth = millimetres -> metres
+depth_min_mm: 100              # depth outside this range = "no depth"
+depth_max_mm: 3000
+depth_smooth: 15               # frames in each track's median X/Y/Z
+depth_video: null              # B only: a fixed depth file, or "auto". A: leave null
+
+# ---------------------------------------------------------------- ROI
+roi_json: null                 # null = whole frame
+draw_roi: false
+
+# ------------------------------------------------------------ outputs
+# A backend usually takes the result dict from process_frame() and writes nothing.
+output_video: null
+latest_json: null
+history_jsonl: null
+print_frames: false            # true = print every frame to the console (debugging)
+show_preview: false
